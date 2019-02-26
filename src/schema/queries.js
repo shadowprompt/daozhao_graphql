@@ -14,5 +14,6 @@ module.exports = new GraphQLObjectType({
     tag: termRelationshipQueries.tagsByObjectId,
     categories: termTaxonomyQueries.items,
     users: userQueries.users,
+    selectUser: userQueries.select,
   }
 });

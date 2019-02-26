@@ -30,6 +30,9 @@ module.exports = {
       openId: {
         type: new GraphQLNonNull(GraphQLString)
       },
+      unionId: {
+        type: GraphQLString
+      },
       nickName: {
         type: GraphQLString
       },
@@ -43,6 +46,9 @@ module.exports = {
         type: GraphQLInt
       },
       sessionKey: {
+        type: GraphQLString
+      },
+      formId: {
         type: GraphQLString
       }
     },

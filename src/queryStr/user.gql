@@ -1,6 +1,8 @@
 module.exports = {
-  updateUser: `mutation ($openId: String!, $nickName: String, $avatarUrl: String, $gender: Int, $sessionKey: String){
-    data: updateUser(openId: $openId, nickName: $nickName, avatarUrl: $avatarUrl, gender: $gender, sessionKey: $sessionKey){
+  updateUser: `
+  mutation ($openId: String!, $unionId: String, $nickName: String, $avatarUrl: String, $gender: Int, $sessionKey: String, $formId: String,){
+    data: updateUser(openId: $openId, unionId: $unionId, nickName: $nickName, avatarUrl: $avatarUrl, gender: $gender, sessionKey: $sessionKey, formId: $formId){
+      unionId
       openId
       nickName
       password
@@ -9,9 +11,21 @@ module.exports = {
       sessionKey
       registerTime
       updateTime
+      formId
     }
   }`,
-  getUsers: `
-    
+  selectUser: `
+    query($openId: String){
+      data: selectUser(openId: $openId){
+        ID
+        unionId
+        openId
+        nickName
+        sessionKey
+        formId
+        registerTime
+        updateTime
+      }
+    }
   `
 };

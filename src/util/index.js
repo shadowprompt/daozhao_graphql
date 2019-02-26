@@ -179,9 +179,9 @@ const getWXAccessToken = (response, direct = false) => new Promise(async (resolv
 
 const decryptData = (encryptedData, iv, sessionKey, appid) => {
   // base64 decode
-  const encryptedDataNew = Buffer.from(encryptedData.replace(/\s+/g, '+'), 'base64');
-  const sessionKeyNew = Buffer.from(sessionKey.replace(/\s+/g, '+'), 'base64');
-  const ivNew = Buffer.from(iv.replace(/\s+/g, '+'), 'base64');
+  const encryptedDataNew = Buffer.from(encryptedData, 'base64');
+  const sessionKeyNew = Buffer.from(sessionKey, 'base64');
+  const ivNew = Buffer.from(iv, 'base64');
 
   let decoded = '';
   try {
@@ -232,46 +232,6 @@ const JWTDecode = (token, strict = true) => {
     }
   });
 };
-
-// const Middleware = new ApolloLink((operation, forward) => {
-//   // add the authorization to the headers
-//   console.log('Middleware', operation, forward)
-//   return forward(operation)
-// })
-// const Afterware = new ApolloLink((operation, forward) => {
-//   return forward(operation).map(response => {
-//     console.log('Afterware--response', response)
-//     return response
-//   })
-// })
-// const errorLink = onError(({
-//   graphQLErrors,
-//   networkError
-// }) => {
-//   if (graphQLErrors)
-//     graphQLErrors.map(({
-//         message,
-//         locations,
-//         path
-//       }) =>
-//       console.log(
-//         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-//       ),
-//     );
-//   if (networkError) console.log(`[Network error]: ${networkError}`);
-// });
-
-// const httpLink = new HttpLink({
-//   uri: 'http://localhost:5050/graphql',
-//   headers: {
-//     Authorization: `Bearer ${APOLLO_TOKEN}`
-//   }
-// })
-// const cache = new InMemoryCache()
-// const apollo = new ApolloClient({
-//   link: from([Middleware, Afterware, errorLink, httpLink]),
-//   cache
-// })
 
 module.exports = {
   isProduction,

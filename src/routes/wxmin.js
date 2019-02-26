@@ -4,7 +4,9 @@ const router = require('express').Router();
 const {
   nodeStore,
   getWXAccessToken,
+  JWTSign,
   JWTDecode,
+  decryptData,
 } = require('../util');
 
 const {
@@ -13,6 +15,7 @@ const {
   WXMIN_API_URL
 } = require('../config/index');
 
+const queryStr = require('../queryStr/user.gql');
 //
 router.post('*', (req, res, next) => {
   const {
@@ -21,7 +24,9 @@ router.post('*', (req, res, next) => {
   console.log('authorization', authorization);
   const parsedAuth = authorization && JWTDecode(authorization, false);
   console.log('parsedAuth ', parsedAuth);
-  req.body.openId = parsedAuth && parsedAuth.payload.openId || ''; // 将用户的openId挂载到req.body上面
+  if (parsedAuth && parsedAuth.payload.openId) {
+    req.body.openId = parsedAuth && parsedAuth.payload.openId || ''; // 将用户的openId挂载到req.body上面
+  }
   next();
 });
 
@@ -29,16 +34,34 @@ router.post('/decryptData', async (req, res) => {
   const {
     encryptedData,
     iv,
-    sessionKey,
+    openId,
   } = req.body;
-  try {
-    const decryptData = util.decryptData(encryptedData, iv, sessionKey, WXMIN_APPID);
-    res.send(decryptData);
-  } catch (e) {
-    res.send({
-      success: false,
-    })
-  }
+  // 获取sessionKey
+  axios.post('http://localhost:5050/graphql', {
+    query: queryStr.selectUser,
+    variables: {
+      openId
+    },
+  }).then(success => {
+    console.log('get sessionKey SUCCESS', success.data);
+    const [{
+      sessionKey
+    }] = success.data.data.data || {};
+    console.log('sessionKey', sessionKey)
+    try {
+      const decryptedData = decryptData(encryptedData, iv, sessionKey, WXMIN_APPID);
+      res.send(decryptedData);
+    } catch (e) {
+      console.log('try/catch', e);
+      res.send({
+        success: false,
+      })
+    }
+  }).catch(err => {
+    console.log('query graphql err ', err);
+    res.sendStatus(500);
+  });
+
 });
 
 router.post('/login', async (req, res) => {
@@ -64,25 +87,30 @@ router.post('/login', async (req, res) => {
 
   // decrypt 解码用户信息
   try {
+    console.log('开始解码', encryptedData, iv, sessionKey, WXMIN_APPID)
     const {
       watermark,
       ...userInfo
-    } = util.decryptData(encryptedData, iv, sessionKey, WXMIN_APPID);
-    console.log('userInfo', userInfo);
+    } = decryptData(encryptedData, iv, sessionKey, WXMIN_APPID);;
+    console.log('解码后得到的userInfo', userInfo);
     await axios.post('http://localhost:5050/graphql', {
       query: queryStr.updateUser,
-      variables: userInfo,
+      variables: {
+        ...userInfo,
+        sessionKey,
+      },
     }).then(result => {
-      console.log('graphql 成功', Date.now());
-    }).catch(err => console.log('query graphql err ', err));
+      console.log('存储sessionKey 成功', Date.now());
+    }).catch(err => console.log('存储sessionKey 失败', err));
 
     res.send({
-      data: util.JWTSign({
+      data: JWTSign({
         openId,
         expiresIn: 60 * 60 * 1
       }),
     });
   } catch (e) {
+    console.log('e', e);
     res.sendStatus(500);
     return;
   }
@@ -130,6 +158,21 @@ router.post('/push', async (req, res) => {
   }).catch(err => res.sendStatus(502));
 });
 
+router.post('/storeFormId', async (req, res) => {
+  axios.post('http://localhost:5050/graphql', {
+    query: queryStr.updateUser,
+    variables: {
+      openId: req.body.openId,
+      formId: req.body.formId,
+    }
+  }).then(result => {
+    res.send(result.data);
+  }).catch(err => {
+    console.log('err', err);
+    res.sendStatus(500)
+  })
+});
+
 router.post('/pushAll', async (req, res) => {
   const {
     access_token
@@ -139,48 +182,43 @@ router.post('/pushAll', async (req, res) => {
   }
   const {
     template_id,
-    form_id
   } = req.body;
-  const users = await axios.post('http://localhost:5050/graphql', {
-
-  })
+  const userResult = await axios.post('http://localhost:5050/graphql', {
+    query: `
+      query{
+        users{
+          openId,
+          formId
+        }
+      }
+    `,
+  });
+  const {
+    users = []
+  } = userResult.data.data || {};
   const url = `${WXMIN_API_URL}/cgi-bin/message/wxopen/template/send?access_token=${access_token}`;
-  Promise.all([
-    axios.post(url, {
+  Promise.all(users.map(item => axios.post(url, {
       template_id,
-      form_id,
-      touser: 'oHS780PjvytIufPoDFKbftrh9N_4',
+      form_id: item.formId,
+      touser: item.openId,
       data: {
         "keyword1": {
           "value": "测试数据一",
           "color": "#173198"
         },
         "keyword2": {
-          "value": "测试数据二",
+          "value": new Date(),
           "color": "#173177"
         }
       },
-    }), axios.post(url, {
-      template_id,
-      form_id: "59708635fbbeea5b1db01b68b2b9cb35",
-      touser: 'oHS780MuBJVFM22yJt6bZAI5RTPM',
-      data: {
-        "keyword3": {
-          "value": "测试数据三",
-          "color": "#173177"
-        },
-        "keyword4": {
-          "value": "测试数据四",
-          "color": "#173111"
-        },
-      }
+    })))
+    .then(result => {
+      console.log('success', result);
+      res.send(result.data);
+    }).catch(err => {
+      console.log('err', err);
+      res.sendStatus(500)
     })
-  ]).then(result => {
-    console.log('pushAll result', result);
-    res.send({
-      success: true,
-    });
-  }).catch(err => res.sendStatus(502));
 });
 
 // 返回小程序appId, appSecret
