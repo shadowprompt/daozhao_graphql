@@ -6,7 +6,7 @@ let {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLList
-} = require('graphql')
+} = require('graphql');
 
 // Defines the type
 module.exports = new GraphQLObjectType({
@@ -26,4 +26,4 @@ module.exports = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLInt)
     },
   }
-})
+});

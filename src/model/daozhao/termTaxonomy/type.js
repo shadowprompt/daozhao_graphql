@@ -6,7 +6,7 @@ let {
   GraphQLObjectType,
   GraphQLNonNull,
   GraphQLList
-} = require('graphql')
+} = require('graphql');
 
 const termTaxonomyTypeFields = {
   term_taxonomy_id: {
@@ -32,7 +32,12 @@ const termTaxonomyTypeFields = {
   },
   slug: {
     type: GraphQLString,
-  }
+  },
+  // categories: {
+  //   type: new GraphQLObjectType({
+  //
+  //   })
+  // }
 };
 
 // Defines the type
