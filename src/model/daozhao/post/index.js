@@ -1,5 +1,7 @@
-const DAO = require('../../../lib/DAO')
-const mysql = require('../../../lib/dbWrapper')
+const DAO = require('../../../lib/DAO');
+const mysql = require('../../../lib/dbWrapper');
+
+const TermTaxonomy = require('../termTaxonomy/index');
 
 class Index extends DAO {
 
@@ -19,10 +21,37 @@ class Index extends DAO {
     return await this.find(id)
   }
 
+  static async list(_, fields) {
+    let currentPage = 1;
+    let pageSize = 10;
+    if (fields.currentPage !== undefined) {
+      currentPage = fields.currentPage;
+      Reflect.deleteProperty(fields, 'currentPage');
+    }
+    if (fields.pageSize !== undefined) {
+      pageSize = fields.pageSize;
+      Reflect.deleteProperty(fields, 'pageSize');
+    }
+    const lists = await this.findByFields({
+      fields,
+      page: {
+        currentPage,
+        pageSize,
+      },
+      order: {
+        direction: 'desc',
+        by: 'ID'
+      }
+    });
+    return lists.map(async item => ({
+      ...item,
+      ...await TermTaxonomy.getTermOfPost(TermTaxonomy, {id: item.ID}),
+    }))
+  }
+
   static async getTermTaxonomyName(_, {
     id
   }) {
-    console.log('getTermTaxonomyName ', id);
     const queryFactory = (taxonomy) => `SELECT * from wp_terms WHERE term_id in (SELECT term_id FROM wp_term_taxonomy WHERE taxonomy = '${taxonomy}' AND term_taxonomy_id IN (SELECT term_taxonomy_id FROM wp_term_relationships WHERE object_id = ?))`;
     // let baseQuery = `SELECT * from wp_terms WHERE term_id in (SELECT term_id FROM wp_term_taxonomy WHERE term_taxonomy_id in (SELECT term_taxonomy_id FROM wp_term_relationships WHERE object_id = ?))`;
     // let baseQuery = `SELECT * FROM wp_term_taxonomy WHERE term_taxonomy_id in (SELECT term_taxonomy_id FROM wp_term_relationships WHERE object_id = ?)`;
