@@ -1,12 +1,13 @@
-require('env2')(process.env.NODE_ENV === 'development' ? './.env.dev' : '.env.prod');
+const path = require('path');
+const envPath = path.join(__dirname, process.env.NODE_ENV === 'development' ? '../.env.dev' : '../.env.prod');
+require('env2')(envPath);
 const express = require('express')
 const bodyParser = require('body-parser')
 const Routes = require('./routes')
 const http = require('http');
-const path = require('path');
 const fs = require('fs');
 const spdy = require('spdy');
-const socket = require('socket.io');
+const socket = require('socket.io-client');
 const ws = require('ws');
 const axios = require('axios');
 
