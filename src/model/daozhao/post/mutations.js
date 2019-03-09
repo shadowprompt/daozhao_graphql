@@ -6,8 +6,8 @@ const {
   GraphQLFloat
 } = require('graphql')
 const type = require('./type')
-const Post = require('.')
-const TermRelationship = require('../termRelationship');
+const Post = require('./index')
+const TermRelationship = require('../termRelationship/index');
 const TermRelationshipType = require('../termRelationship/type');
 
 // Defines the mutations

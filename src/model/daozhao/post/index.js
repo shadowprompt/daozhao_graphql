@@ -1,5 +1,5 @@
-const DAO = require('../../lib/DAO')
-const mysql = require('../../lib/dbWrapper')
+const DAO = require('../../../lib/DAO')
+const mysql = require('../../../lib/dbWrapper')
 
 class Index extends DAO {
 
@@ -7,7 +7,7 @@ class Index extends DAO {
    * Overrides TABLE_NAME with this class' backing table at MySQL
    */
   static get TABLE_NAME() {
-    return 'wp_terms'
+    return 'wp_posts'
   }
 
   /**
@@ -17,36 +17,6 @@ class Index extends DAO {
     id
   }) {
     return await this.find(id)
-  }
-
-  /**
-   * Returns a list of posts matching the passed fields(page)
-   * @param {*} fields - Fields to be matched
-   */
-  static async list(_, fields) {
-    // Find current page posts
-    let currentPage = 1;
-    let pageSize = 10;
-    if (fields.currentPage !== undefined) {
-      currentPage = fields.currentPage;
-      Reflect.deleteProperty(fields, 'currentPage');
-    }
-    if (fields.pageSize !== undefined) {
-      pageSize = fields.pageSize;
-      Reflect.deleteProperty(fields, 'pageSize');
-    }
-    const res = await this.findByFields({
-      fields,
-      page: {
-        currentPage,
-        pageSize,
-      },
-      order: {
-        direction: 'desc',
-        by: 'term_id'
-      }
-    });
-    return res;
   }
 
   static async getTermTaxonomyName(_, {

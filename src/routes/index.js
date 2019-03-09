@@ -2,6 +2,7 @@ const websocket = require('./websocket');
 const graphql = require('./graphql');
 const push = require('./push');
 const wxmin = require('./wxmin');
+const wxpublic = require('./wxpublic');
 const schedule = require('./schedule');
 const store = require('./store');
 const user = require('./user');
@@ -19,10 +20,11 @@ module.exports = class Routes {
     //Throws if no instance of express was passed
     if (app == null) throw new Error("You must provide an instance of express")
 
-    app.use('/', websocket)
+    app.use('/', websocket);
     app.use('/graphql', graphql);
     app.use('/push', push);
     app.use('/wxmin', wxmin);
+    app.use('/wxpublic', wxpublic);
     app.use('/schedule', schedule);
     app.use('/store', store);
     app.use('/user', user);

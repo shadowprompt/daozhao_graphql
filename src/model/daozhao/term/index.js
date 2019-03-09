@@ -1,6 +1,5 @@
-const DAO = require('../../lib/DAO')
-const mysql = require('../../lib/dbWrapper')
-const termsIndex = require('../term/index')
+const DAO = require('../../../lib/DAO')
+const mysql = require('../../../lib/dbWrapper')
 
 class Index extends DAO {
 
@@ -8,7 +7,7 @@ class Index extends DAO {
    * Overrides TABLE_NAME with this class' backing table at MySQL
    */
   static get TABLE_NAME() {
-    return 'wp_term_taxonomy'
+    return 'wp_terms'
   }
 
   /**
@@ -36,57 +35,27 @@ class Index extends DAO {
       pageSize = fields.pageSize;
       Reflect.deleteProperty(fields, 'pageSize');
     }
-    // const topLevel = await this.findByFields({
-    //   fields,
-    //   page: {
-    //     currentPage,
-    //     pageSize,
-    //   },
-    //   order: {
-    //     direction: 'desc',
-    //     by: 'term_id'
-    //   }
-    // });
-    // return Promise.all(topLevel.map(async item => {
-    //   return {
-    //     ...item,
-    //     children: await this.findByFields({
-    //       fields: {
-    //         parent: item.term_id,
-    //       },
-    //       page: {
-    //         currentPage: 1,
-    //         pageSize: 100,
-    //       },
-    //       order: {
-    //         direction: 'desc',
-    //         by: 'term_id'
-    //       }
-    //     })
-    //   }
-    // }));
-
-    function test(arr) {
-      const sortedArr = JSON.parse(JSON.stringify(arr)).sort((a, b) => a.term_id > b.term_id);
-      return sortedArr.filter(item => !item.parent).map(item => ({
-        ...item,
-        children: sortedArr.filter(sub => sub.parent == item.term_id)
-      }))
-    }
-
-    let baseQuery = `SELECT * FROM ?? WHERE parent = ? AND daozhaoc_wp.wp_term_taxonomy.term_id = daozhaoc_wp.wp_terms.term_id ORDER BY ?? DESC LIMIT ?, ?`;
-    const res = await mysql.createQuery({
-      query: `SELECT * FROM wp_term_taxonomy, wp_terms WHERE wp_term_taxonomy.term_id = wp_terms.term_id AND wp_term_taxonomy.taxonomy = 'category'`,
-      // query: baseQuery,
-      params: [0]
+    const res = await this.findByFields({
+      fields,
+      page: {
+        currentPage,
+        pageSize,
+      },
+      order: {
+        direction: 'desc',
+        by: 'term_id'
+      }
     });
-    return test(res);
+    return res;
   }
 
   static async getTermTaxonomyName(_, {
     id
   }) {
+    console.log('getTermTaxonomyName ', id);
     const queryFactory = (taxonomy) => `SELECT * from wp_terms WHERE term_id in (SELECT term_id FROM wp_term_taxonomy WHERE taxonomy = '${taxonomy}' AND term_taxonomy_id IN (SELECT term_taxonomy_id FROM wp_term_relationships WHERE object_id = ?))`;
+    // let baseQuery = `SELECT * from wp_terms WHERE term_id in (SELECT term_id FROM wp_term_taxonomy WHERE term_taxonomy_id in (SELECT term_taxonomy_id FROM wp_term_relationships WHERE object_id = ?))`;
+    // let baseQuery = `SELECT * FROM wp_term_taxonomy WHERE term_taxonomy_id in (SELECT term_taxonomy_id FROM wp_term_relationships WHERE object_id = ?)`;
     const params = [id];
     const [categories, tags] = await Promise.all([mysql.createQuery({
       query: queryFactory('category'),

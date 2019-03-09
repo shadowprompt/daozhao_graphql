@@ -1,7 +1,7 @@
 const {
   GraphQLObjectType
 } = require('graphql')
-const postMutation = require('../model/post/mutations');
+const postMutation = require('../model/daozhao/post/mutations');
 const userMutation = require('../model/user/mutations');
 
 module.exports = new GraphQLObjectType({

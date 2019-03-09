@@ -1,5 +1,5 @@
-const DAO = require('../../lib/DAO')
-const mysql = require('../../lib/dbWrapper')
+const DAO = require('../../../lib/DAO')
+const mysql = require('../../../lib/dbWrapper')
 
 class TermRelationship extends DAO {
 

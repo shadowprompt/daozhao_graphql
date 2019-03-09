@@ -1,9 +1,9 @@
 const {
   GraphQLObjectType
 } = require('graphql')
-const postQueries = require('../model/post/queries')
-const termRelationshipQueries = require('../model/termRelationship/queries')
-const termTaxonomyQueries = require('../model/termTaxonomy/queries')
+const postQueries = require('../model/daozhao/post/queries')
+const termRelationshipQueries = require('../model/daozhao/termRelationship/queries')
+const termTaxonomyQueries = require('../model/daozhao/termTaxonomy/queries')
 const userQueries = require('../model/user/queries')
 
 module.exports = new GraphQLObjectType({
