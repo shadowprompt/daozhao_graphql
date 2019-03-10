@@ -3,10 +3,10 @@ const {
   GraphQLString,
   GraphQLList,
   GraphQLID,
-  GraphQLFloat
-} = require('graphql')
-const type = require('./type')
-const Post = require('./index')
+  GraphQLFloat,
+} = require('graphql');
+const type = require('./type');
+const Post = require('./index');
 const TermRelationship = require('../termRelationship/index');
 const TermRelationshipType = require('../termRelationship/type');
 
@@ -16,36 +16,36 @@ module.exports = {
     type: new GraphQLList(TermRelationshipType),
     args: {
       id: {
-        type: new GraphQLNonNull(GraphQLID)
-      }
+        type: new GraphQLNonNull(GraphQLID),
+      },
     },
-    resolve: TermRelationship.getByID.bind(TermRelationship)
+    resolve: TermRelationship.getByID.bind(TermRelationship),
   },
   addPost: {
     type,
     args: {
       type: {
-        type: new GraphQLNonNull(GraphQLString)
+        type: new GraphQLNonNull(GraphQLString),
       },
       price: {
-        type: new GraphQLNonNull(GraphQLFloat)
+        type: new GraphQLNonNull(GraphQLFloat),
       },
     },
-    resolve: Post.createEntry.bind(Post)
+    resolve: Post.createEntry.bind(Post),
   },
   updatePost: {
     type,
     args: {
       id: {
-        type: GraphQLID
+        type: GraphQLID,
       },
       type: {
-        type: new GraphQLNonNull(GraphQLString)
+        type: new GraphQLNonNull(GraphQLString),
       },
       price: {
-        type: new GraphQLNonNull(GraphQLFloat)
+        type: new GraphQLNonNull(GraphQLFloat),
       },
     },
-    resolve: Post.updateEntry.bind(Post)
-  }
-}
+    resolve: Post.updateEntry.bind(Post),
+  },
+};

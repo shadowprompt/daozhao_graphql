@@ -3,10 +3,10 @@ const {
   GraphQLID,
   GraphQLString,
   GraphQLInt,
-  GraphQLFloat
-} = require('graphql')
-const type = require('./type')
-const Index = require("./index")
+  GraphQLFloat,
+} = require('graphql');
+const type = require('./type');
+const Index = require('./index');
 
 // Defines the queries
 module.exports = {
@@ -14,27 +14,27 @@ module.exports = {
     type: new GraphQLList(type),
     args: {
       post_status: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       post_type: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       currentPage: {
         type: GraphQLInt,
       },
       pageSize: {
         type: GraphQLInt,
-      }
+      },
     },
-    resolve: Index.list.bind(Index)
+    resolve: Index.list.bind(Index),
   },
   item: {
     type,
     args: {
       id: {
-        type: GraphQLID
-      }
+        type: GraphQLID,
+      },
     },
-    resolve: Index.getByID.bind(Index)
-  }
-}
+    resolve: Index.getByID.bind(Index),
+  },
+};

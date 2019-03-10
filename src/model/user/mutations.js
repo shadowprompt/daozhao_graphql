@@ -5,10 +5,10 @@ const {
   GraphQLID,
   GraphQLInt,
   GraphQLObjectType,
-  GraphQLFloat
-} = require('graphql')
-const type = require('./type')
-const Index = require('./')
+  GraphQLFloat,
+} = require('graphql');
+const type = require('./type');
+const Index = require('./');
 
 // Defines the mutations
 module.exports = {
@@ -16,42 +16,42 @@ module.exports = {
     type,
     args: {
       openId: {
-        type: new GraphQLNonNull(GraphQLString)
+        type: new GraphQLNonNull(GraphQLString),
       },
       nickName: {
-        type: GraphQLString
+        type: GraphQLString,
       },
     },
-    resolve: Index.findOrCreateUser.bind(Index)
+    resolve: Index.findOrCreateUser.bind(Index),
   },
   updateUser: {
     type,
     args: {
       openId: {
-        type: new GraphQLNonNull(GraphQLString)
+        type: new GraphQLNonNull(GraphQLString),
       },
       unionId: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       nickName: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       password: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       avatarUrl: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       gender: {
-        type: GraphQLInt
+        type: GraphQLInt,
       },
       sessionKey: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       formId: {
-        type: GraphQLString
-      }
+        type: GraphQLString,
+      },
     },
-    resolve: Index.updateUser.bind(Index)
-  }
-}
+    resolve: Index.updateUser.bind(Index),
+  },
+};

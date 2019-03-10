@@ -5,45 +5,45 @@ let {
   GraphQLFloat,
   GraphQLObjectType,
   GraphQLNonNull,
-  GraphQLList
-} = require('graphql')
+  GraphQLList,
+} = require('graphql');
 // Defines the type
 module.exports = new GraphQLObjectType({
   name: 'User',
   description: 'userinfo',
   fields: {
     ID: {
-      type: new GraphQLNonNull(GraphQLID)
+      type: new GraphQLNonNull(GraphQLID),
     },
     unionId: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     openId: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     nickName: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     password: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     avatarUrl: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     gender: {
-      type: GraphQLInt
+      type: GraphQLInt,
     },
     sessionKey: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     formId: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     registerTime: {
-      type: new GraphQLNonNull(GraphQLFloat)
+      type: new GraphQLNonNull(GraphQLFloat),
     },
     updateTime: {
-      type: new GraphQLNonNull(GraphQLFloat)
+      type: new GraphQLNonNull(GraphQLFloat),
     },
-  }
-})
+  },
+});

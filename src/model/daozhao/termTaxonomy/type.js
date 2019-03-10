@@ -5,27 +5,27 @@ let {
   GraphQLFloat,
   GraphQLObjectType,
   GraphQLNonNull,
-  GraphQLList
+  GraphQLList,
 } = require('graphql');
 
 const termTaxonomyTypeFields = {
   term_taxonomy_id: {
-    type: new GraphQLNonNull(GraphQLInt)
+    type: new GraphQLNonNull(GraphQLInt),
   },
   term_id: {
-    type: new GraphQLNonNull(GraphQLInt)
+    type: new GraphQLNonNull(GraphQLInt),
   },
   taxonomy: {
-    type: new GraphQLNonNull(GraphQLString)
+    type: new GraphQLNonNull(GraphQLString),
   },
   description: {
-    type: GraphQLString
+    type: GraphQLString,
   },
   parent: {
-    type: new GraphQLNonNull(GraphQLInt)
+    type: new GraphQLNonNull(GraphQLInt),
   },
   count: {
-    type: new GraphQLNonNull(GraphQLInt)
+    type: new GraphQLNonNull(GraphQLInt),
   },
   name: {
     type: GraphQLString,
@@ -47,16 +47,17 @@ const termTaxonomyType = new GraphQLObjectType({
   fields: {
     ...termTaxonomyTypeFields,
     children: {
-      type: new GraphQLList(new GraphQLObjectType({
-        name: 'TermTaxonomy2',
-        description: 'A termTaxonomy2',
-        fields: {
-          ...termTaxonomyTypeFields,
-        }
-      }))
-    }
-  }
+      type: new GraphQLList(
+        new GraphQLObjectType({
+          name: 'TermTaxonomy2',
+          description: 'A termTaxonomy2',
+          fields: {
+            ...termTaxonomyTypeFields,
+          },
+        }),
+      ),
+    },
+  },
 });
-
 
 module.exports = termTaxonomyType;

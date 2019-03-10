@@ -5,8 +5,8 @@ let {
   GraphQLFloat,
   GraphQLObjectType,
   GraphQLNonNull,
-  GraphQLList
-} = require('graphql')
+  GraphQLList,
+} = require('graphql');
 const Index = require('./index');
 const termType = require('../term/type');
 const termTaxonomy = require('../termTaxonomy/type');
@@ -16,28 +16,28 @@ module.exports = new GraphQLObjectType({
   description: 'A post',
   fields: {
     ID: {
-      type: new GraphQLNonNull(GraphQLID)
+      type: new GraphQLNonNull(GraphQLID),
     },
     post_title: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     post_content: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     post_type: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     post_status: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     post_parent: {
-      type: new GraphQLNonNull(GraphQLID)
+      type: new GraphQLNonNull(GraphQLID),
     },
     post_name: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     post_date: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     categories: {
       type: new GraphQLList(termType),

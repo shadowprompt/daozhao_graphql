@@ -2,10 +2,10 @@ const {
   GraphQLList,
   GraphQLID,
   GraphQLString,
-  GraphQLFloat
-} = require('graphql')
-const type = require('./type')
-const Index = require("./index")
+  GraphQLFloat,
+} = require('graphql');
+const type = require('./type');
+const Index = require('./index');
 
 // Defines the queries
 module.exports = {
@@ -13,42 +13,42 @@ module.exports = {
     type: new GraphQLList(type),
     args: {
       nickName: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       unionId: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       openId: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       sessionKey: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       formId: {
-        type: GraphQLString
-      }
+        type: GraphQLString,
+      },
     },
-    resolve: Index.list.bind(Index)
+    resolve: Index.list.bind(Index),
   },
   select: {
     type: new GraphQLList(type),
     args: {
       nickName: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       unionId: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       openId: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       sessionKey: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       formId: {
-        type: GraphQLString
-      }
+        type: GraphQLString,
+      },
     },
-    resolve: Index.findMatching.bind(Index)
-  }
-}
+    resolve: Index.findMatching.bind(Index),
+  },
+};

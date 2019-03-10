@@ -4,11 +4,11 @@ const {
   GraphQLString,
   GraphQLInt,
   GraphQLObjectType,
-  GraphQLFloat
+  GraphQLFloat,
 } = require('graphql');
 const type = require('./type');
 const termType = require('../term/type');
-const Index = require("./index");
+const Index = require('./index');
 
 // Defines the queries
 module.exports = {
@@ -16,13 +16,13 @@ module.exports = {
     type: new GraphQLList(type),
     args: {
       taxonomy: {
-        type: GraphQLString
+        type: GraphQLString,
       },
       parent: {
-        type: GraphQLInt
+        type: GraphQLInt,
       },
     },
-    resolve: Index.list.bind(Index)
+    resolve: Index.list.bind(Index),
   },
   getTermOfPost: {
     type: new GraphQLObjectType({
@@ -33,14 +33,14 @@ module.exports = {
         },
         tags: {
           type: new GraphQLList(termType),
-        }
-      }
+        },
+      },
     }),
     args: {
       id: {
-        type: GraphQLInt
+        type: GraphQLInt,
       },
     },
-    resolve: Index.getTermOfPost.bind(Index)
-  }
-}
+    resolve: Index.getTermOfPost.bind(Index),
+  },
+};

@@ -5,8 +5,8 @@ let {
   GraphQLFloat,
   GraphQLObjectType,
   GraphQLNonNull,
-  GraphQLList
-} = require('graphql')
+  GraphQLList,
+} = require('graphql');
 
 // Defines the type
 module.exports = new GraphQLObjectType({
@@ -14,13 +14,13 @@ module.exports = new GraphQLObjectType({
   description: 'A termRelationship',
   fields: {
     object_id: {
-      type: new GraphQLNonNull(GraphQLID)
+      type: new GraphQLNonNull(GraphQLID),
     },
     term_taxonomy_id: {
-      type: new GraphQLNonNull(GraphQLInt)
+      type: new GraphQLNonNull(GraphQLInt),
     },
     term_order: {
-      type: new GraphQLNonNull(GraphQLInt)
+      type: new GraphQLNonNull(GraphQLInt),
     },
-  }
-})
+  },
+});
