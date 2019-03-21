@@ -1,9 +1,7 @@
 const schedule = require('node-schedule');
 const router = require('express').Router();
 
-const {
-  getWXAccessToken
-} = require('../util/index');
+const { getWXAccessToken } = require('../util/index');
 
 let job;
 
@@ -12,28 +10,33 @@ function setSchedule(minutes) {
   if (job) {
     job.cancel();
   }
+
   job = schedule.scheduleJob(nextTime, () => {
     console.log('执行定时任务');
-    getWXAccessToken(void 0, true).catch(err => console.log('定时请求access_token失败', err));
+    getWXAccessToken(void 0, true).catch((err) =>
+      console.log('定时请求access_token失败', err),
+    );
     setSchedule(minutes);
   });
 }
 router.post('/', (req, res) => {
-  getWXAccessToken(res, true).then(() => {
-    setSchedule(100);
-    res.send({
-      success: true,
+  getWXAccessToken(res, true)
+    .then(() => {
+      setSchedule(100);
+      res.send({
+        success: true,
+      });
+    })
+    .catch((err) => {
+      console.log('定时请求access_token失败', err);
     });
-  }).catch(err => {
-    console.log('定时请求access_token失败', err)
-  });
 });
 
 router.post('/list', (req, res) => {
   if (job) {
     res.send(job.nextInvocation());
   } else {
-    res.send()
+    res.send();
   }
 });
 

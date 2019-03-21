@@ -38,15 +38,23 @@ class App {
         extends: false,
       }),
     );
+
+    this.setCORS();
+    //Registers the routes used by the app
+    new Routes(this.expressApp);
+  }
+
+  setStatic(){
     // this.expressApp.use('/static', express.static('./src/static')); // 跟执行node的路径有关
     this.expressApp.use(
       '/static',
       express.static(path.resolve(__dirname, './static')),
     );
-
-    this.setCORS();
-    //Registers the routes used by the app
-    new Routes(this.expressApp);
+    this.expressApp.use(
+      '/.well-known',
+      express.static(path.resolve(__dirname, './static/well-known')),
+    );
+    this.expressApp.use(express.static(path.resolve(__dirname, './static')));
   }
 
   run() {
@@ -54,6 +62,7 @@ class App {
     this.setWebsocket();
     this.setSchedule();
     // this.setWS();
+    this.setStatic();
   }
   spdyListen() {
     spdy

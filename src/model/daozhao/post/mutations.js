@@ -21,31 +21,4 @@ module.exports = {
     },
     resolve: TermRelationship.getByID.bind(TermRelationship),
   },
-  addPost: {
-    type,
-    args: {
-      type: {
-        type: new GraphQLNonNull(GraphQLString),
-      },
-      price: {
-        type: new GraphQLNonNull(GraphQLFloat),
-      },
-    },
-    resolve: Post.createEntry.bind(Post),
-  },
-  updatePost: {
-    type,
-    args: {
-      id: {
-        type: GraphQLID,
-      },
-      type: {
-        type: new GraphQLNonNull(GraphQLString),
-      },
-      price: {
-        type: new GraphQLNonNull(GraphQLFloat),
-      },
-    },
-    resolve: Post.updateEntry.bind(Post),
-  },
 };
