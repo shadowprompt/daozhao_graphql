@@ -118,19 +118,21 @@ class App {
   }
   setCORS() {
     this.expressApp.use('*', (req, res, next) => {
-      if (/(daozhao\.com\.cn|daozhao.com)$/.test(req.headers.origin)) {
+      console.log(' req.headers.guest-> ', req.headers.guest);
+      // if (/\.daozhao\.(com\.cn|com)$/.test(req.headers.origin) || req.headers.guest === 'Shadow') {
+        console.log('+++', req.method, req.originalUrl);
+        console.log(
+          req.method.toLowerCase() === 'post' ? req.body : req.params,
+        );
+        console.log('---', req.originalUrl);
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header(
           'Access-Control-Allow-Methods',
           'PUT, GET, POST, DELETE, OPTIONS',
         );
         res.header('Access-Control-Allow-Headers', '*');
-        console.log('+++', req.method, req.originalUrl);
-        console.log(
-          req.method.toLowerCase() === 'post' ? req.body : req.params,
-        );
-        console.log('---', req.originalUrl);
-      }
+
+      // }
       next();
     });
   }

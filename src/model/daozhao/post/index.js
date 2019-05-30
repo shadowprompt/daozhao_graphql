@@ -60,9 +60,12 @@ class Index extends DAO {
       tags,
     };
   }
+
   /**
-   * Returns a list of posts matching the passed fields
-   * @param {*} fields - Fields to be matched
+   *
+   * @param _
+   * @param fields
+   * @returns {Promise<*>}
    */
   static async findMatching(_, fields) {
     // Returns early with all posts if no criteria was passed
