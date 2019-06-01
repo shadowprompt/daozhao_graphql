@@ -2,7 +2,7 @@ const {
   GraphQLObjectType
 } = require('graphql');
 const postQueries = require('../model/daozhao/post/queries');
-const termRelationshipQueries = require('../model/daozhao/termRelationship/queries');
+const termQueries = require('../model/daozhao/term/queries');
 const termTaxonomyQueries = require('../model/daozhao/termTaxonomy/queries');
 const userQueries = require('../model/user/queries');
 
@@ -11,10 +11,9 @@ module.exports = new GraphQLObjectType({
   fields: {
     post: postQueries.item,
     posts: postQueries.items,
-    tag: termRelationshipQueries.tagsByObjectId,
-    categories: termTaxonomyQueries.items,
-    termOfPost: termTaxonomyQueries.getTermOfPost,
-    users: userQueries.users,
-    selectUser: userQueries.select,
+    termTaxonomies: termTaxonomyQueries.items,
+    term: termQueries.item,
+    // users: userQueries.users,
+    // selectUser: userQueries.select,
   }
 });

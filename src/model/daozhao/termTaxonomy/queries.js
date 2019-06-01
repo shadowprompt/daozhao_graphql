@@ -8,6 +8,7 @@ const {
 } = require('graphql');
 const type = require('./type');
 const termType = require('../term/type');
+const instance = require('../../../lib/seq/instance/wp_term_taxonomy');
 const Index = require('./index');
 
 // Defines the queries
@@ -15,32 +16,25 @@ module.exports = {
   items: {
     type: new GraphQLList(type),
     args: {
+      term_taxonomy_id: {
+        type: GraphQLInt,
+      },
+      term_id: {
+        type: GraphQLInt,
+      },
       taxonomy: {
         type: GraphQLString,
       },
       parent: {
         type: GraphQLInt,
       },
-    },
-    resolve: Index.list.bind(Index),
-  },
-  getTermOfPost: {
-    type: new GraphQLObjectType({
-      name: 'termOfPost',
-      fields: {
-        categories: {
-          type: new GraphQLList(termType),
-        },
-        tags: {
-          type: new GraphQLList(termType),
-        },
+      currentPage: {
+        type: GraphQLInt,
       },
-    }),
-    args: {
-      id: {
+      pageSize: {
         type: GraphQLInt,
       },
     },
-    resolve: Index.getTermOfPost.bind(Index),
+    resolve: instance.list.bind(instance),
   },
 };

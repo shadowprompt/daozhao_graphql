@@ -6,7 +6,7 @@ const {
   GraphQLFloat,
 } = require('graphql');
 const type = require('./type');
-const Index = require('./index');
+const instance = require('../../../lib/seq/instance/wp_posts');
 
 // Defines the queries
 module.exports = {
@@ -26,7 +26,7 @@ module.exports = {
         type: GraphQLInt,
       },
     },
-    resolve: Index.list.bind(Index),
+    resolve: instance.list.bind(instance),
   },
   item: {
     type,
@@ -35,6 +35,6 @@ module.exports = {
         type: GraphQLID,
       },
     },
-    resolve: Index.getByID.bind(Index),
+    resolve: instance.find.bind(instance),
   },
 };
