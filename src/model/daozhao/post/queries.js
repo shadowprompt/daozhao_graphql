@@ -3,8 +3,10 @@ const {
   GraphQLID,
   GraphQLString,
   GraphQLInt,
+  GraphQLObjectType,
   GraphQLFloat,
 } = require('graphql');
+// const commonOptions = require('../commonOptions');
 const type = require('./type');
 const instance = require('../../../lib/seq/instance/wp_posts');
 
@@ -25,6 +27,12 @@ module.exports = {
       pageSize: {
         type: GraphQLInt,
       },
+      order: {
+        type: new GraphQLList(GraphQLString),
+      },
+      slug: {
+        type: GraphQLString,
+      }
     },
     resolve: instance.list.bind(instance),
   },

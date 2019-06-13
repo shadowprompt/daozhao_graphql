@@ -45,5 +45,8 @@ module.exports = new GraphQLObjectType({
     tags: {
       type: new GraphQLList(termType),
     },
+    total: {
+      type: GraphQLInt,
+    }
   },
 });

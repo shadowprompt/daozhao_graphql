@@ -2,18 +2,7 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const DAO = require('./DAO');
 const sequelize = require('./index');
-
-const generateSqlConditions = (obj, tableName) => {
-  return Object.keys(obj)
-    .map((key) => {
-      if (typeof obj[key] === 'string') {
-        return `${tableName}.${key} = "${obj[key]}"`;
-      } else {
-        return `${tableName}.${key} = ${obj[key]}`;
-      }
-    })
-    .join(' AND ');
-};
+const {generateSqlConditions} = require('../../util/index');
 
 const getNestCategories = (arr) => {
   const sortedArr = JSON.parse(JSON.stringify(arr)).sort(
@@ -37,7 +26,7 @@ class TAXONOMY extends DAO {
     Reflect.deleteProperty(fields, 'pageSize');
 
     const sqlConditions =
-      generateSqlConditions(fields, this.model.tableName) +
+      generateSqlConditions(['post_type', 'post_status'])(fields, this.model.tableName) +
       ' AND wp_term_taxonomy.term_id = wp_terms.term_id';
     const sqlLimit =
       currentPage && pageSize ? `limit ${currentPage - 1}, ${pageSize}` : '';

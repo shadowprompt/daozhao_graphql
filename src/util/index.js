@@ -238,6 +238,26 @@ const JWTDecode = (token, strict = true) => {
   });
 };
 
+const generateSqlConditions = (hyphen = [], stringKeys = []) => (obj, tableName = '') => {
+  const tableMap = hyphen.reduce((total, curr) => {
+    const splited = curr.split('.');
+    return {
+      ...total,
+      [splited[1]]: splited[0]
+    }
+  }, {});
+  return Object.keys(obj)
+    .map((key) => {
+      const table = tableMap[key] || tableName || '';
+      if (stringKeys.includes(key)) { // 值为字符串
+        return `${table}.${key} = "${obj[key]}"`;
+      } else {
+        return `${table}.${key} = ${obj[key]}`;
+      }
+    })
+    .join(' AND ');
+};
+
 module.exports = {
   isProduction,
   nodeStore,
@@ -251,4 +271,5 @@ module.exports = {
   JWTSign,
   JWTDecode,
   // apollo,
+  generateSqlConditions
 };

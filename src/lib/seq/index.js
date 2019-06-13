@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 class Database {
   get MYSQL_DB_HOST() {
-    return process.env.MYSQL_DB_HOST || '68.168.129.212'
+    return process.env.MYSQL_DB_HOST || '68.168.129.190'
   }
   get MYSQL_DB_PORT() {
     return process.env.MYSQL_DB_PORT || 3306
