@@ -24,9 +24,8 @@ class TAXONOMY extends DAO {
     const { currentPage, pageSize } = fields;
     Reflect.deleteProperty(fields, 'currentPage');
     Reflect.deleteProperty(fields, 'pageSize');
-
     const sqlConditions =
-      generateSqlConditions(['post_type', 'post_status'])(fields, this.model.tableName) +
+      generateSqlConditions(['post_type', 'post_status'], ['taxonomy'])(fields, this.model.tableName) +
       ' AND wp_term_taxonomy.term_id = wp_terms.term_id';
     const sqlLimit =
       currentPage && pageSize ? `limit ${currentPage - 1}, ${pageSize}` : '';

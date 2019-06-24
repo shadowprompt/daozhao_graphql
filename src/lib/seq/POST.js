@@ -16,23 +16,12 @@ class POST extends DAO {
     Reflect.deleteProperty(fields, 'order');
     Reflect.deleteProperty(fields, 'options');
 
-    // const list = await this.findAll({
-    //   where: fields,
-    //   offset: (currentPage - 1) * pageSize,
-    //   limit: pageSize,
-    //   order: [order],
-    //   ...options,
-    // });
-
     const generateOrder = (tableName, arr) => {
       return `${tableName}.${arr[0]} ${arr[1]}`
     };
     console.log('fields -> ', fields);
     const sqlConditions =
       generateSqlConditions(['post_type', 'post_status', 'ter.slug'], ['post_type', 'post_status', 'slug'])(fields, 'po');
-    // const sqlConditions =
-    //   generateSqlConditions(['post_type', 'post_status'], ['ID'])(fields, this.model.tableName);
-    const sqlSort = order.length ? ` ORDER BY ${order.join(' ')}` : '';
     const sqlLimit =
       currentPage && pageSize ? ` LIMIT ${(currentPage - 1) * pageSize}, ${pageSize}` : '';
     const sqlFrom = `
@@ -56,9 +45,7 @@ class POST extends DAO {
             ORDER BY ${generateOrder('po', order)}  ${sqlLimit}
       ) t2 on 1=1
     `;
-    // const res = await sequelize.query(
-    //   `SELECT * FROM wp_posts WHERE ${sqlConditions} ${sqlSort} ${sqlLimit}`
-    // ).then(([result = []]) => result); // 两层数组
+
     const res = await sequelize.query(sql).then(([result = []]) => result); // 两层数组
     return await Promise.all(
       res.map(async (item) => {
