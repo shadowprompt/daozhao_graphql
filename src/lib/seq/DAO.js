@@ -12,11 +12,11 @@ class DAO {
     this.model = subModel;
   }
 
-  async find(_, {id}) {
-    return await this.model.findByPk(id);
+  find(_, {id}) {
+    return this.model.findByPk(id);
   }
-  async list(_, fields) {
-    return await this.model.findAll(fields);
+  list(_, fields) {
+    return this.model.findAll(fields);
   }
   findOne(options) {
     return this.model.findOne(options);
@@ -46,6 +46,32 @@ class DAO {
       fields,
       ...options
     });
+  }
+
+  static handlePagination(fields) {
+    let currentPage = 1;
+    let pageSize = 10;
+    if (fields.currentPage !== undefined) {
+      currentPage = fields.currentPage;
+      Reflect.deleteProperty(fields, 'currentPage');
+    }
+    if (fields.pageSize !== undefined) {
+      pageSize = fields.pageSize;
+      Reflect.deleteProperty(fields, 'pageSize');
+    }
+    return fields;
+  }
+
+  static getNestCategories(arr) {
+    const sortedArr = JSON.parse(JSON.stringify(arr)).sort(
+        (a, b) => a.term_id > b.term_id,
+    );
+    return sortedArr
+        .filter((item) => !item.parent)
+        .map((item) => ({
+          ...item,
+          children: sortedArr.filter((sub) => sub.parent === item.term_id),
+        }));
   }
 }
 module.exports = DAO;

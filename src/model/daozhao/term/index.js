@@ -11,17 +11,7 @@ class Index extends DAO {
   }
 
   static async list(_, fields) {
-    // Find current page posts
-    let currentPage = 1;
-    let pageSize = 10;
-    if (fields.currentPage !== undefined) {
-      currentPage = fields.currentPage;
-      Reflect.deleteProperty(fields, 'currentPage');
-    }
-    if (fields.pageSize !== undefined) {
-      pageSize = fields.pageSize;
-      Reflect.deleteProperty(fields, 'pageSize');
-    }
+    this.handlePagination(fields);
     return this.findByFields({
       fields,
       page: {

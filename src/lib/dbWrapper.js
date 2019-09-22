@@ -1,4 +1,4 @@
-const dbConnector = require('./dbConnector')
+const dbConnector = require('./dbConnector');
 
 module.exports = class dbWrapper {
 

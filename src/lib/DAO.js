@@ -76,7 +76,7 @@ class DAO {
     });
   }
 
-  static list(_, fields) {
+  static handlePagination(fields) {
     let currentPage = 1;
     let pageSize = 10;
     if (fields.currentPage !== undefined) {
@@ -87,6 +87,23 @@ class DAO {
       pageSize = fields.pageSize;
       Reflect.deleteProperty(fields, 'pageSize');
     }
+    return fields;
+  }
+
+  static getNestCategories(arr) {
+    const sortedArr = JSON.parse(JSON.stringify(arr)).sort(
+        (a, b) => a.term_id > b.term_id,
+    );
+    return sortedArr
+        .filter((item) => !item.parent)
+        .map((item) => ({
+          ...item,
+          children: sortedArr.filter((sub) => sub.parent === item.term_id),
+        }));
+  }
+
+  static list(_, fields) {
+    this.handlePagination(fields);
     return this.findByFields({
       fields,
       page: {

@@ -21,36 +21,14 @@ class Index extends DAO {
    * @param {*} fields - Fields to be matched
    */
   static async list(_, fields) {
-    // Find current page posts
-    let currentPage = 1;
-    let pageSize = 10;
-    if (fields.currentPage !== undefined) {
-      currentPage = fields.currentPage;
-      Reflect.deleteProperty(fields, 'currentPage');
-    }
-    if (fields.pageSize !== undefined) {
-      pageSize = fields.pageSize;
-      Reflect.deleteProperty(fields, 'pageSize');
-    }
-
-    const getNestCategories = (arr) => {
-      const sortedArr = JSON.parse(JSON.stringify(arr)).sort(
-        (a, b) => a.term_id > b.term_id,
-      );
-      return sortedArr
-        .filter((item) => !item.parent)
-        .map((item) => ({
-          ...item,
-          children: sortedArr.filter((sub) => sub.parent === item.term_id),
-        }));
-    };
+    this.handlePagination(fields);
 
     const res = await mysql.createQuery({
       query: `SELECT * FROM wp_term_taxonomy, wp_terms WHERE wp_term_taxonomy.term_id = wp_terms.term_id AND wp_term_taxonomy.taxonomy = 'category'`,
       // query: baseQuery,
       params: [0],
     });
-    return getNestCategories(res);
+    return this.getNestCategories(res);
   }
 
   static async getTermOfPost(_, { id }) {
