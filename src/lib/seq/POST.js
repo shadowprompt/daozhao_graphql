@@ -24,7 +24,7 @@ class POST extends DAO {
     const condition = slug ? await term.findTermBySlug(term, {slug}).then(([detail = {}]) => detail) : {};
 
     const sqlConditions =
-      generateSqlConditions(['post_type', 'post_status', 'ter.slug'], ['post_type', 'post_status', 'slug'])(fields, 'po');
+      generateSqlConditions(['slug.ter'], ['post_type', 'post_status', 'slug', 'keyword'], ['keyword'])(fields, 'po');
     const sqlLimit =
       currentPage && pageSize ? ` LIMIT ${(currentPage - 1) * pageSize}, ${pageSize}` : '';
     const sqlFrom = `

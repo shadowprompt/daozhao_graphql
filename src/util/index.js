@@ -238,21 +238,31 @@ const JWTDecode = (token, strict = true) => {
   });
 };
 
-const generateSqlConditions = (hyphen = [], stringKeys = []) => (obj, tableName = '') => {
+/**
+ *
+ * @param hyphen 需要指定表名的，否则会直接使用tableName参数
+ * @param stringKeys 字符串查询的key
+ * @param searchKeys 搜索关键字
+ * @returns {function(*=, *=): string}
+ */
+const generateSqlConditions = (hyphen = [], stringKeys = [], searchKeys = []) => (obj, tableName = '') => {
   const tableMap = hyphen.reduce((total, curr) => {
-    const splited = curr.split('.');
+    const [key, tableName] = curr.split('.');
     return {
       ...total,
-      [splited[1]]: splited[0]
+      [key]: tableName
     }
   }, {});
   return Object.keys(obj)
     .map((key) => {
       const table = tableMap[key] || tableName || '';
+      const value = obj[key];
       if (stringKeys.includes(key)) { // 值为字符串
-        return `${table}.${key} = "${obj[key]}"`;
+        return searchKeys.includes(key)
+          ? `((${table}.post_title LIKE '%${value}%') OR (${table}.post_excerpt LIKE '%${value}%') OR (${table}.post_content LIKE '%${value}%'))`
+          : `${table}.${key} = "${value}"`;
       } else {
-        return `${table}.${key} = ${obj[key]}`;
+        return `${table}.${key} = ${value}`;
       }
     })
     .join(' AND ');

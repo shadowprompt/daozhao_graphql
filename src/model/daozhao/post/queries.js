@@ -12,7 +12,7 @@ const instance = require('../../../lib/seq/instance/wp_posts');
 
 const termFields = require('../term/fields');
 
-const condetionListObj = new GraphQLObjectType({
+const conditionListObj = new GraphQLObjectType({
   name: 'PostsByCondition',
   fields: {
     condition: {
@@ -31,7 +31,7 @@ const condetionListObj = new GraphQLObjectType({
 module.exports = {
   items: {
     // type: new GraphQLList(type),
-    type: condetionListObj,
+    type: conditionListObj,
     args: {
       post_status: {
         type: GraphQLString,
@@ -49,6 +49,9 @@ module.exports = {
         type: new GraphQLList(GraphQLString),
       },
       slug: {
+        type: GraphQLString,
+      },
+      keyword: {
         type: GraphQLString,
       }
     },
