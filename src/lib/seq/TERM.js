@@ -7,6 +7,10 @@ class TERM extends DAO {
   constructor(...arg) {
     super(...arg);
   }
+
+  async findTermBySlug(_, { slug }) {
+    return  sequelize.query(`SELECT * FROM wp_terms WHERE slug = '${slug}'`).then(([result = []]) => result);
+  }
   // get the category and tags info via the id of the post
   async findTermOfPost(_, { id }) {
     const factory = async (taxonomy, id) => {

@@ -20,6 +20,9 @@ class POST extends DAO {
       return `${tableName}.${arr[0]} ${arr[1]}`
     };
     console.log('fields -> ', fields);
+    const { slug = '' } = fields;
+    const condition = slug ? await term.findTermBySlug(term, {slug}).then(([detail = {}]) => detail) : {};
+
     const sqlConditions =
       generateSqlConditions(['post_type', 'post_status', 'ter.slug'], ['post_type', 'post_status', 'slug'])(fields, 'po');
     const sqlLimit =
@@ -47,7 +50,7 @@ class POST extends DAO {
     `;
 
     const res = await sequelize.query(sql).then(([result = []]) => result); // 两层数组
-    return await Promise.all(
+    const list = await Promise.all(
       res.map(async (item) => {
         return {
           // ...item.get({ plain: true }),
@@ -56,6 +59,10 @@ class POST extends DAO {
         };
       }),
     );
+    return {
+      list,
+      condition,
+    };
   }
 }
 
