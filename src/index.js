@@ -118,13 +118,24 @@ class App {
   }
   setCORS() {
     this.expressApp.use('*', (req, res, next) => {
+      const getIp = () => {
+        return req.headers['x-forwarded-for'] ||
+          req.connection.remoteAddress ||
+          req.socket.remoteAddress ||
+          req.connection.socket.remoteAddress;
+      };
+      let ip = '';
+      try {
+        ip = getIp();
+      } catch (e) {
+        ip = 'ipError';
+      }
       console.log(' req.headers.guest-> ', req.headers.guest);
       // if (/\.daozhao\.(com\.cn|com)$/.test(req.headers.origin) || req.headers.guest === 'Shadow') {
-        console.log('+++', req.method, req.originalUrl);
+        console.log('+++', req.method, req.originalUrl, req.ip, ip, '+++');
         console.log(
           req.method.toLowerCase() === 'post' ? req.body : req.params,
         );
-        console.log('---', req.originalUrl);
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header(
           'Access-Control-Allow-Methods',
