@@ -4,6 +4,7 @@ const {
   GraphQLString,
   GraphQLInt,
   GraphQLObjectType,
+  GraphQLNonNull,
   GraphQLFloat,
 } = require('graphql');
 // const commonOptions = require('../commonOptions');
@@ -11,6 +12,31 @@ const type = require('./type');
 const instance = require('../../../lib/seq/instance/wp_posts');
 
 const termFields = require('../term/fields');
+const dateFiles = {
+  year: {
+    type: new GraphQLNonNull(GraphQLString),
+  },
+  month: {
+    type: new GraphQLNonNull(GraphQLString),
+  },
+  day: {
+    type: new GraphQLNonNull(GraphQLString),
+  },
+};
+const archiveType = new GraphQLObjectType({
+  name: 'archiveType',
+  fields: {
+    year: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    month: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    posts: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+  },
+});
 
 const conditionListObj = new GraphQLObjectType({
   name: 'PostsByCondition',
@@ -20,6 +46,9 @@ const conditionListObj = new GraphQLObjectType({
         name: 'termObj',
         fields: termFields,
       }),
+    },
+    date: {
+      type: new GraphQLList(new GraphQLNonNull(GraphQLString)),
     },
     list: {
       type: new GraphQLList(type),
@@ -75,4 +104,8 @@ module.exports = {
     },
     resolve: instance.find.bind(instance),
   },
+  archives: {
+    type: new GraphQLList(archiveType),
+    resolve: instance.archiveList.bind(instance),
+  }
 };

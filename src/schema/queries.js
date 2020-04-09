@@ -11,6 +11,7 @@ module.exports = new GraphQLObjectType({
   fields: {
     post: postQueries.item,
     posts: postQueries.items,
+    archives: postQueries.archives,
     termTaxonomies: termTaxonomyQueries.items,
     term: termQueries.item,
     // users: userQueries.users,

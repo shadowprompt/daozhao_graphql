@@ -66,7 +66,12 @@ class POST extends DAO {
     return {
       list,
       condition,
+      date: [fields.year, fields.month, fields.day],
     };
+  }
+  archiveList(_) {
+    const sql = `SELECT YEAR(post_date) AS 'year', MONTH(post_date) AS 'month', count(ID) as posts FROM wp_posts WHERE post_type = 'post' AND post_status = 'publish' GROUP BY YEAR(post_date), MONTH(post_date) ORDER BY post_date DESC`
+    return sequelize.query(sql).then(([result = []]) => result); // 两层数组
   }
 }
 
