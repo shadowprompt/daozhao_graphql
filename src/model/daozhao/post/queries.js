@@ -53,7 +53,16 @@ module.exports = {
       },
       keyword: {
         type: GraphQLString,
-      }
+      },
+      year: {
+        type: GraphQLString,
+      },
+      month: {
+        type: GraphQLString,
+      },
+      day: {
+        type: GraphQLString,
+      },
     },
     resolve: instance.list.bind(instance),
   },

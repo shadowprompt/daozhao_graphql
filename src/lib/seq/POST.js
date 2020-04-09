@@ -24,7 +24,9 @@ class POST extends DAO {
     const condition = slug ? await term.findTermBySlug(term, {slug}).then(([detail = {}]) => detail) : {};
 
     const sqlConditions =
-      generateSqlConditions(['slug.ter'], ['post_type', 'post_status', 'slug', 'keyword'], ['keyword'])(fields, 'po');
+      generateSqlConditions(['slug.ter'], ['post_type', 'post_status', 'slug', 'keyword'],
+        ['keyword'], ['year', 'month', 'day'])
+      (fields, 'po');
     const sqlLimit =
       currentPage && pageSize ? ` LIMIT ${(currentPage - 1) * pageSize}, ${pageSize}` : '';
     const sqlFrom = `
@@ -37,15 +39,17 @@ class POST extends DAO {
       SELECT t1.*, t2.* FROM
       (
         SELECT count(1) as total FROM
-        (SELECT DISTINCT po.ID
-        ${sqlFrom}
-        WHERE ${sqlConditions}) abc
+        (
+          SELECT DISTINCT po.ID
+          ${sqlFrom}
+          WHERE ${sqlConditions}
+        ) abc
       ) t1
       left join (
           SELECT DISTINCT po.*
-            ${sqlFrom}
-            WHERE ${sqlConditions}
-            ORDER BY ${generateOrder('po', order)}  ${sqlLimit}
+          ${sqlFrom}
+          WHERE ${sqlConditions}
+          ORDER BY ${generateOrder('po', order)}  ${sqlLimit}
       ) t2 on 1=1
     `;
 

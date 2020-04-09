@@ -243,24 +243,40 @@ const JWTDecode = (token, strict = true) => {
  * @param hyphen 需要指定表名的，否则会直接使用tableName参数
  * @param stringKeys 字符串查询的key
  * @param searchKeys 搜索关键字
+ * @param dateKeys 日期
  * @returns {function(*=, *=): string}
  */
-const generateSqlConditions = (hyphen = [], stringKeys = [], searchKeys = []) => (obj, tableName = '') => {
+const generateSqlConditions = (
+  hyphen = [],
+  stringKeys = [],
+  searchKeys = [],
+  dateKeys = [],
+) => (obj, tableName = '') => {
   const tableMap = hyphen.reduce((total, curr) => {
     const [key, tableName] = curr.split('.');
     return {
       ...total,
-      [key]: tableName
-    }
+      [key]: tableName,
+    };
   }, {});
+  const dateMap = (table, dateKey) => {
+    return {
+      year: `YEAR(${table}.post_date)`,
+      month: `MONTH(${table}.post_date)`,
+      day: `DAY(${table}.post_date)`,
+    }[dateKey];
+  };
   return Object.keys(obj)
     .map((key) => {
       const table = tableMap[key] || tableName || '';
       const value = obj[key];
-      if (stringKeys.includes(key)) { // 值为字符串
+      if (stringKeys.includes(key)) {
+        // 值为字符串
         return searchKeys.includes(key)
           ? `((${table}.post_title LIKE '%${value}%') OR (${table}.post_excerpt LIKE '%${value}%') OR (${table}.post_content LIKE '%${value}%'))`
           : `${table}.${key} = "${value}"`;
+      } else if (dateKeys.includes(key)) {
+        return `${dateMap(table, key)} = ${value}`;
       } else {
         return `${table}.${key} = ${value}`;
       }
@@ -281,5 +297,5 @@ module.exports = {
   JWTSign,
   JWTDecode,
   // apollo,
-  generateSqlConditions
+  generateSqlConditions,
 };
