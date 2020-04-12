@@ -7,9 +7,8 @@ let {
   GraphQLNonNull,
   GraphQLList,
 } = require('graphql');
-const Index = require('./index');
 const termType = require('../term/type');
-const termTaxonomy = require('../termTaxonomy/type');
+const userType = require('../user/type');
 // Defines the type
 module.exports = new GraphQLObjectType({
   name: 'Post',
@@ -44,6 +43,9 @@ module.exports = new GraphQLObjectType({
     },
     tags: {
       type: new GraphQLList(termType),
+    },
+    user: {
+      type: userType,
     },
     total: {
       type: GraphQLInt,

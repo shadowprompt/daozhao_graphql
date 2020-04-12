@@ -15,16 +15,16 @@ class DAO {
   find(_, {id}) {
     return this.model.findByPk(id);
   }
-  list(_, fields) {
-    return this.model.findAll(fields);
-  }
-  findOne(options) {
-    return this.model.findOne(options);
-  }
-  findAll(options) {
+  list(_, options) {
     return this.model.findAll(options);
   }
-  findByFields({
+  findOne(_, options) {
+    return this.model.findOne(options);
+  }
+  findAll(_, options) {
+    return this.model.findAll(options);
+  }
+  findByFields(_, {
     fields = {},
     page = { currentPage: 1, pageSize: 10 },
     order =[],

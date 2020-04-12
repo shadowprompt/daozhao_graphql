@@ -9,6 +9,7 @@ const userQueries = require('../model/user/queries');
 module.exports = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
+    prevNext: postQueries.prevNext,
     post: postQueries.item,
     posts: postQueries.items,
     archives: postQueries.archives,
