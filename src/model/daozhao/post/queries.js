@@ -91,7 +91,7 @@ module.exports = {
         type: GraphQLID,
       },
     },
-    resolve: instance.find.bind(instance),
+    resolve: instance.item.bind(instance),
   },
   prevNext: {
     type: new GraphQLList(new GraphQLList(type)),

@@ -104,20 +104,13 @@ class POST extends DAO {
       }
     })]);
   }
-  findNext(_, fields)  {
-    return this.model.findAll({
-      limit: 1,
-      order: [
-        ['post_date', 'ASC']
-      ],
-      where: {
-        post_date: {
-          [Op.gt]: fields.post_date,
-        },
-        post_status: 'publish',
-        post_type: 'post',
-      }
-    });
+  async item(_, {id})  {
+    const result = await this.model.findByPk(id);
+    return {
+      ...result.get({ plain: true }),
+      ...(await term.findTermOfPost(term, {id: result.ID})),
+      user: await user.find(user, {id: result.post_author}),
+    };
   }
 }
 
