@@ -14,6 +14,14 @@ webpush.setVapidDetails(
   PUSH_PRIVATE_KEY,
 );
 
+let cacheName = 'daozhao-v1.1.2';
+let filesToCache =   [
+  '/favicon.ico',
+  '/owner.jpg',
+  '/qrcode.jpg',
+  '/entry.js',
+];
+
 function pushMessage(subscription, data = {}) {
   if (typeof data === 'object') {
     data = JSON.stringify(data);
@@ -27,10 +35,17 @@ function pushMessage(subscription, data = {}) {
 
 router.get('/', function(req, res) {
   const pushPromises = localStorage._keys
-    .map((key) => JSON.parse(localStorage.getItem(key)).subscription)
-    .map((subscription) =>
+    .map((key) => ({ key, subscription: JSON.parse(localStorage.getItem(key)).subscription}))
+    .map(({key, subscription}) =>
       pushMessage(subscription, {
-        title: 'daozhao',
+        title: 'title',
+        body: 'body',
+        action: 'action',
+        actionTitle: 'actionTitle'
+      }).catch((err) => {
+        if (err.statusCode === 410) { // 删掉已经失效的
+          localStorage.removeItem(key);
+        }
       }),
     );
   Promise.all(pushPromises)
@@ -144,4 +159,24 @@ router.post('/clear', function(req, res) {
   });
 });
 
+router.post('/cacheList', function(req, res) {
+  res.send({
+    cacheName,
+    filesToCache,
+  });
+});
+
+router.post('/cacheList/set', function(req, res) {
+  if (req.body.cacheName) {
+    cacheName = req.body.cacheName;
+  }
+  if (req.body.filesToCache) {
+    filesToCache = req.body.filesToCache;
+  }
+  res.send({
+    success: true,
+    cacheName,
+    filesToCache,
+  });
+});
 module.exports = router;
