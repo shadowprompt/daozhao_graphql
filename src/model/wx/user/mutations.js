@@ -8,7 +8,7 @@ const {
   GraphQLFloat,
 } = require('graphql');
 const type = require('./type');
-const Index = require('./');
+const instance = require('../../../lib/seq/instance/wx_user');
 
 // Defines the mutations
 module.exports = {
