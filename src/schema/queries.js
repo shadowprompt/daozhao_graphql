@@ -4,7 +4,7 @@ const {
 const postQueries = require('../model/daozhao/post/queries');
 const termQueries = require('../model/daozhao/term/queries');
 const termTaxonomyQueries = require('../model/daozhao/termTaxonomy/queries');
-const userQueries = require('../model/user/queries');
+const wxUserQueries = require('../model/wx/user/queries');
 
 module.exports = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -15,7 +15,7 @@ module.exports = new GraphQLObjectType({
     archives: postQueries.archives,
     termTaxonomies: termTaxonomyQueries.items,
     term: termQueries.item,
-    // users: userQueries.users,
-    // selectUser: userQueries.select,
+    wxUsers: wxUserQueries.users,
+    wxSelectUser: wxUserQueries.select,
   }
 });

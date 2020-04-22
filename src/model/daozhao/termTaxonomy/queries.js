@@ -9,7 +9,6 @@ const {
 const type = require('./type');
 const termType = require('../term/type');
 const instance = require('../../../lib/seq/instance/wp_term_taxonomy');
-const Index = require('./index');
 
 // Defines the queries
 module.exports = {

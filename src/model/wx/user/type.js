@@ -9,7 +9,7 @@ let {
 } = require('graphql');
 // Defines the type
 module.exports = new GraphQLObjectType({
-  name: 'WechatUser',
+  name: 'WXUser',
   description: 'userinfo',
   fields: {
     ID: {

@@ -5,7 +5,7 @@ const {
   GraphQLFloat,
 } = require('graphql');
 const type = require('./type');
-const Index = require('./index');
+const instance = require('../../../lib/seq/instance/wx_user');
 
 // Defines the queries
 module.exports = {
@@ -28,7 +28,7 @@ module.exports = {
         type: GraphQLString,
       },
     },
-    resolve: Index.list.bind(Index),
+    resolve: instance.list.bind(instance),
   },
   select: {
     type: new GraphQLList(type),
@@ -49,6 +49,6 @@ module.exports = {
         type: GraphQLString,
       },
     },
-    resolve: Index.findMatching.bind(Index),
+    resolve: instance.findMatching.bind(instance),
   },
 };

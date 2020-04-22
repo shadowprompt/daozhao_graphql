@@ -29,7 +29,7 @@ class DAO {
     page = { currentPage: 1, pageSize: 10 },
     order =[],
   } = {}, options = {}) {
-    return this.findAll({
+    return this.findAll(_, {
       where: fields,
       offset: (page.currentPage - 1) * page.pageSize,
       limit: page.pageSize,
@@ -38,11 +38,11 @@ class DAO {
     });
   }
 
-  findMatching(fields, options){
+  findMatching(_, fields, options){
     if(Object.keys(fields).length ===0 ){
-      return this.findAll(fields);
+      return this.findAll(_, fields);
     }
-    return this.findByFields({
+    return this.findByFields(_, {
       fields,
       ...options
     });
