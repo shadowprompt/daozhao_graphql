@@ -7,6 +7,7 @@ const schedule = require('./schedule');
 const store = require('./store');
 const user = require('./user');
 const dict = require('./dict');
+const gzf = require('./gzf');
 
 const mainfest = require('./mainfest');
 const serviceWorker = require('./serviceWorker');
@@ -29,6 +30,7 @@ module.exports = class Routes {
     app.use('/store', store);
     app.use('/user', user);
     app.use('/dict', dict);
+    app.use('/gzf', gzf);
 
     app.use('/manifest', mainfest);
     app.use('/service-worker.js', serviceWorker);

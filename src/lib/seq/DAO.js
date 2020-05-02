@@ -12,6 +12,10 @@ class DAO {
     this.model = subModel;
   }
 
+  sync(_) {
+    return this.model.sync({ force: true });
+  }
+
   find(_, {id}) {
     return this.model.findByPk(id);
   }

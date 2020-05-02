@@ -35,6 +35,7 @@ class App {
     //Allows the server to parse json
     this.expressApp.use(
       bodyParser.json({
+        limit : '2100000kb',
         extends: false,
       }),
     );
