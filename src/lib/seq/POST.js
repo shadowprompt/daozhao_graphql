@@ -104,6 +104,20 @@ class POST extends DAO {
       }
     })]);
   }
+  related(_, { id, tags: [firstTag, secondTag = firstTag], limit = 6})  {
+    const sql = `SELECT wp_posts.* \
+      FROM wp_posts, wp_term_relationships, wp_term_taxonomy \
+      WHERE wp_posts.ID = wp_term_relationships.object_id \
+      AND wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id \
+      AND wp_term_taxonomy.taxonomy = 'post_tag' \
+      AND wp_posts.post_status = 'publish' \
+      AND wp_posts.post_type = 'post' \
+      AND (wp_term_taxonomy.term_id = ${firstTag} OR wp_term_taxonomy.term_id = ${secondTag}) \
+      AND wp_posts.ID != ${id} \
+      ORDER BY RAND() \
+      LIMIT ${limit}`;
+    return sequelize.query(sql).then(([result = []]) => result); // 两层数组
+  }
   async item(_, {id})  {
     const result = await this.model.findByPk(id);
     return {

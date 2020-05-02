@@ -9,9 +9,10 @@ const wxUserQueries = require('../model/wx/user/queries');
 module.exports = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
-    prevNext: postQueries.prevNext,
     post: postQueries.item,
     posts: postQueries.items,
+    prevNext: postQueries.prevNext,
+    related: postQueries.related,
     archives: postQueries.archives,
     termTaxonomies: termTaxonomyQueries.items,
     term: termQueries.item,

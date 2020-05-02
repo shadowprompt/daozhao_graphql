@@ -102,6 +102,21 @@ module.exports = {
     },
     resolve: instance.prevNext.bind(instance),
   },
+  related: {
+    type: new GraphQLList(type),
+    args: {
+      id: {
+        type: GraphQLID,
+      },
+      limit: {
+        type: GraphQLInt,
+      },
+      tags: {
+        type: new GraphQLList(GraphQLID),
+      }
+    },
+    resolve: instance.related.bind(instance),
+  },
   archives: {
     type: new GraphQLList(archiveType),
     resolve: instance.archiveList.bind(instance),
