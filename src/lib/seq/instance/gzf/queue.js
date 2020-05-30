@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const GZF_HOUSE_RECODE = require('../../GZF');
+const GZF = require('../../GZF');
 
-const instance = new GZF_HOUSE_RECODE({
+const instance = new GZF({
     T_ID: {
       type: Sequelize.INTEGER,
       allowNull: false,

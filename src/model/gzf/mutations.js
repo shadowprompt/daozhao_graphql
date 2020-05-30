@@ -29,6 +29,15 @@ module.exports = {
     },
     resolve: queue.sync.bind(queue, project, house, emove, period, qualification),
   },
+  qualificationStore: {
+    type,
+    args: {
+      jsonData: {
+        type: GraphQLString,
+      },
+    },
+    resolve: qualification.store.bind(qualification),
+  },
   queue: {
     type,
     args: {
@@ -39,6 +48,6 @@ module.exports = {
         type: GraphQLString,
       },
     },
-    resolve: queue.recode.bind(queue, project, house, emove,  period, qualification),
+    resolve: queue.queue.bind(queue, project, house, emove,  period, qualification),
   },
 };

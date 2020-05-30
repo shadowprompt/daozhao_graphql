@@ -2,7 +2,7 @@ const http2 = require('http2');
 const fs = require('fs');
 const path = require('path')
 
-const client = http2.connect('https://localhost:8443', {
+const client = http2.connect('https://127.0.0.1:8443', {
   ca: fs.readFileSync(path.resolve(__dirname, 'ssl/localhost-cert.pem'))
 });
 client.on('error', (err) => console.error(err));

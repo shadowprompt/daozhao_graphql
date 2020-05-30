@@ -229,7 +229,7 @@ const JWTDecode = (token, strict = true) => {
     });
   }
 
-  jwt.verify(token, SIGN_SECRET, (err, decoded) => {
+  return jwt.verify(token, SIGN_SECRET, (err, decoded) => {
     if (err) {
       return;
     } else {

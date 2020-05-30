@@ -32,7 +32,7 @@ router.post('/decryptData', async (req, res) => {
   const { encryptedData, iv, openId } = req.body;
   // 获取sessionKey
   axios
-    .post('http://localhost:5050/graphql', {
+    .post('http://127.0.0.1:5050/graphql', {
       query: queryStr.selectUser,
       variables: {
         openId,
@@ -91,7 +91,7 @@ router.post('/login', async (req, res) => {
     );
     console.log('解码后得到的userInfo', userInfo);
     await axios
-      .post('http://localhost:5050/graphql', {
+      .post('http://127.0.0.1:5050/graphql', {
         query: queryStr.updateUser,
         variables: {
           ...userInfo,
@@ -106,7 +106,7 @@ router.post('/login', async (req, res) => {
     res.send({
       data: JWTSign({
         openId,
-        expiresIn: 60 * 60 * 1,
+        expiresIn: 60 * 60,
       }),
     });
   } catch (e) {
@@ -154,7 +154,7 @@ router.post('/push', async (req, res) => {
     .then((result) => {
       res.send(result.data);
       axios
-        .post('http://localhost:5050/push', result.data)
+        .post('http://127.0.0.1:5050/push', result.data)
         .catch((err) => console.log('推送微信反馈失败', err));
     })
     .catch((err) => res.sendStatus(502));
@@ -162,7 +162,7 @@ router.post('/push', async (req, res) => {
 
 router.post('/storeFormId', async (req, res) => {
   axios
-    .post('http://localhost:5050/graphql', {
+    .post('http://127.0.0.1:5050/graphql', {
       query: queryStr.updateUser,
       variables: {
         openId: req.body.openId,
@@ -184,7 +184,7 @@ router.post('/pushAll', async (req, res) => {
     return;
   }
   const { template_id } = req.body;
-  const userResult = await axios.post('http://localhost:5050/graphql', {
+  const userResult = await axios.post('http://127.0.0.1:5050/graphql', {
     query: `
       query{
         users{
@@ -289,6 +289,40 @@ router.post('/getTemplateList', async (req, res) => {
         res.sendStatus(502);
       });
   }
+});
+
+// 发送消息
+router.post('/pushMsg', async (req, res) => {
+  const { access_token } = await getWXAccessToken(res);
+  if (access_token) {
+    axios
+      .post(
+        `https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=${access_token}`,
+        {
+          access_token,
+          touser: req.body.openId,
+          template_id: req.body.templateId,
+        },
+      )
+      .then((result) => {
+        console.log('result', result.data);
+        res.send(result.data);
+      })
+      .catch((err) => {
+        console.log('err', err, err.statusCode);
+        res.sendStatus(502);
+      });
+  }
+});
+
+router.post('/getLocalAccessToken', (req, res) => {
+  const localStorage = nodeStore('../localStorage/wxmin');
+  const accessToken = JSON.parse(localStorage.getItem('accessToken'));
+  const token = JWTSign({
+    abc: 123,
+  });
+  const result = JWTDecode(token);
+  res.send(accessToken);
 });
 
 module.exports = router;

@@ -25,7 +25,23 @@ class GZF extends DAO {
     qualification.model.sync();
   }
 
-  recode(project, house, emove, period, qualification, un, { jsonData } = {}) {
+  store(_, { jsonData }) {
+    let dataArray = [];
+    try {
+      dataArray = JSON.parse(jsonData);
+    } catch (e) {
+      console.log('store error -> ', e);
+    }
+    const { updateOnDuplicate, fields } = getAllKeys(dataArray, ['id']);
+    return this.model.bulkCreate(dataArray, {
+      updateOnDuplicate,
+      fields,
+    });
+  }
+
+  // 记录
+  queue(project, house, emove, period, qualification, un, { jsonData } = {}) {
+    console.log('unun -> ', un);
     let obj = {};
     try {
       obj = JSON.parse(jsonData);

@@ -42,6 +42,14 @@ const instance = new GZF({
       type: Sequelize.STRING,
       allowNull: true,
     },
+    createTime: {
+      type: Sequelize.DATE,
+      allowNull: true,
+    },
+    updateTime: {
+      type: Sequelize.DATE,
+      allowNull: true,
+    },
   },
   {
     // underscored: true,

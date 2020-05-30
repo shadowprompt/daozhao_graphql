@@ -23,30 +23,34 @@ router.post('/', async (req, res) => {
 
   const { accessToken, token } = loginData;
   const result = await axios
-    .post('https://select.pdgzf.com/api/v1.0/app/gzf/house/list', {
-      where: {
-        keywords: '',
-        township: null,
-        projectId: null,
-        typeName: null,
-        rent: null,
+    .post(
+      'https://select.pdgzf.com/api/v1.0/app/gzf/house/list',
+      {
+        where: {
+          keywords: '',
+          township: null,
+          projectId: null,
+          typeName: null,
+          rent: null,
+        },
+        pageIndex: 0,
+        pageSize: 30,
       },
-      pageIndex: 0,
-      pageSize: 30,
-    }, {
-      withCredentials: true,
-      headers: {
-        gzfauthentication: accessToken,
-        token,
+      {
+        withCredentials: true,
+        headers: {
+          gzfauthentication: accessToken,
+          token,
+        },
       },
-    })
+    )
     .catch((error) => console.log('house/list error', error));
   const houseListData = result && result.data && result.data.data;
   if (!houseListData) {
     return res.send('houseListData fail');
   }
   console.log('house/list data -> ', houseListData);
-  const queueHouseData = houseListData.data.map(item => ({
+  const queueHouseData = houseListData.data.map((item) => ({
     project: item.project, // 这里的project很详细,供接口保存
     id: item.id,
     apiId: item.apiId,
@@ -68,27 +72,27 @@ router.post('/', async (req, res) => {
     createTime: item.createTime,
   }));
   const queueData = houseListData.data.reduce((total, current) => {
-    return [
-      ...total,
-      ...(current.queue || []),
-    ];
+    return [...total, ...(current.queue || [])];
   }, []);
-  axios.post('http://localhost:5050/graphql', {
-    query: `
+  axios
+    .post('http://127.0.0.1:5050/graphql', {
+      query: `
         mutation queue($jsonData: String, $jsonKeys: String){
          data:queue(jsonData: $jsonData, jsonKeys: $jsonKeys){
             ID
           }
         }
       `,
-    variables: {
-      jsonData: JSON.stringify({
-        queueHouseData,
-        queueData,
-      }),
-      jsonKeys: "[\"apiId\"]"
-    },
-  }).then(result => console.log('queue data', result)).catch(error => console.log('queue error', error));
+      variables: {
+        jsonData: JSON.stringify({
+          queueHouseData,
+          queueData,
+        }),
+        jsonKeys: '["apiId"]',
+      },
+    })
+    .then((result) => console.log('queue data', result))
+    .catch((error) => console.log('queue error', error));
   res.send({
     msg: 'ok',
     queueData,
@@ -121,7 +125,7 @@ router.post('/', async (req, res) => {
     area: item.area,
     emoveInDate: item.emoveInDate,
     queueCount: item.queueCount,
-    queue: (item.queue || []).map(queueItem => ({
+    queue: (item.queue || []).map((queueItem) => ({
       position: queueItem.position,
       id: queueItem.qualification.id,
       code: queueItem.qualification.code,
@@ -130,7 +134,7 @@ router.post('/', async (req, res) => {
       maxSelectableHouseType: queueItem.qualification.maxSelectableHouseType,
     })),
   }));
-  const queryData = houseList.map(item => ({
+  const queryData = houseList.map((item) => ({
     apiId: item.apiId,
     propertyName: item.propertyName,
     fullName: item.fullName,
@@ -139,25 +143,57 @@ router.post('/', async (req, res) => {
     area: item.area,
     emoveInDate: item.emoveInDate,
     queueCount: item.queueCount,
-    queue: item.queue.map(queue => queue.startDate).join(','),
+    queue: item.queue.map((queue) => queue.startDate).join(','),
   }));
-  axios.post('http://localhost:5050/graphql', {
-    query: `
+  axios
+    .post('http://127.0.0.1:5050/graphql', {
+      query: `
         mutation houseRecode($jsonData: String, $jsonKeys: String){
          data:houseRecode(jsonData: $jsonData, jsonKeys: $jsonKeys){
             ID
           }
         }
       `,
-    variables: {
-      jsonData: JSON.stringify(queryData),
-      jsonKeys: "[\"apiId\"]"
-    },
-  }).then(result => console.log('store data', result)).catch(error => console.log('store error', error));
+      variables: {
+        jsonData: JSON.stringify(queryData),
+        jsonKeys: '["apiId"]',
+      },
+    })
+    .then((result) => console.log('store data', result))
+    .catch((error) => console.log('store error', error));
   res.send({
     totalCount: houseList.length,
     list: houseList,
   });
+});
+
+router.post('/storeQualification', async (req, res) => {
+  const { currentPage = 1, pageSize = 10} = req.body;
+  axios.post(`https://select.pdgzf.com/api/v1.0/app/gzf/qualification/list`, {
+    orderBy: {
+      createTime: 'DESC'
+    },
+    pageSize: pageSize,
+    pageIndex: currentPage,
+  }).then(response => {
+    const data = response.data.data.data || [];
+    axios
+      .post('http://127.0.0.1:5050/graphql', {
+        query: `
+        mutation qualificationStore($jsonData: String){
+          data:qualificationStore(jsonData: $jsonData){
+            rent
+          }
+        }
+      `,
+        variables: {
+          jsonData: JSON.stringify(data)
+        },
+      })
+      .then((result) => console.log('storeQualification data', result))
+      .catch((error) => console.log('storeQualification error', error));
+    res.send(data);
+  })
 });
 
 module.exports = router;

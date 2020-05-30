@@ -10,5 +10,6 @@ module.exports = new GraphQLObjectType({
   fields: {
     dbSync: gzfMutation.dbSync,
     queue: gzfMutation.queue,
+    qualificationStore: gzfMutation.qualificationStore,
   },
 });

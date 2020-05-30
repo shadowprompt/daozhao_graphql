@@ -149,7 +149,7 @@ class App {
     });
   }
   setSchedule() {
-    axios.post('http://localhost:5050/schedule');
+    axios.post('http://127.0.0.1:5050/schedule');
   }
 }
 

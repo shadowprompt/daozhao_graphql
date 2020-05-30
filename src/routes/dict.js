@@ -7,7 +7,7 @@ const queryStr = require('../queryStr/user.gql');
 router.post('/', async (req, res) => {
   const { word } = req.body;
   axios
-    .post('http://localhost:5050/graphql', {
+    .post('http://127.0.0.1:5050/graphql', {
       query: `
         mutation($word: String!){
           data:addWord(word: $word){
