@@ -1,9 +1,9 @@
-const path = require('path');
 const router = require('express').Router();
 const webpush = require('web-push');
 const { time2Str } = require('../util');
 const { requestPayload, timeoutPromise, nodeStore } = require('../util');
 const localStorage = nodeStore('../localStorage/push-service');
+const cacheNameLocalStorage = nodeStore('../localStorage/cache-name');
 const { PUSH_PUBLIC_KEY, PUSH_PRIVATE_KEY } = require('../config');
 
 console.log(PUSH_PUBLIC_KEY, PUSH_PRIVATE_KEY);
@@ -14,13 +14,16 @@ webpush.setVapidDetails(
   PUSH_PRIVATE_KEY,
 );
 
-let cacheName = 'daozhao-v1.1.2';
-let filesToCache =   [
-  '/favicon.ico',
-  '/owner.jpg',
-  '/qrcode.jpg',
-  '/entry.js',
-];
+function updateCacheName(version = 'daozhao-v4.1.0') {
+  const cacheName = cacheNameLocalStorage.getItem('cacheName');
+  if (!cacheName) {
+    cacheNameLocalStorage.setItem('cacheName', version);
+  } else {
+    return cacheName;
+  }
+}
+
+let filesToCache = ['/favicon.ico', '/owner.jpg', '/qrcode.jpg', '/entry.js'];
 
 function pushMessage(subscription, data = {}) {
   if (typeof data === 'object') {
@@ -35,15 +38,19 @@ function pushMessage(subscription, data = {}) {
 
 router.get('/', function(req, res) {
   const pushPromises = localStorage._keys
-    .map((key) => ({ key, subscription: JSON.parse(localStorage.getItem(key)).subscription}))
-    .map(({key, subscription}) =>
+    .map((key) => ({
+      key,
+      subscription: JSON.parse(localStorage.getItem(key)).subscription,
+    }))
+    .map(({ key, subscription }) =>
       pushMessage(subscription, {
         title: 'title',
         body: 'body',
         action: 'action',
-        actionTitle: 'actionTitle'
+        actionTitle: 'actionTitle',
       }).catch((err) => {
-        if (err.statusCode === 410) { // 删掉已经失效的
+        if (err.statusCode === 410) {
+          // 删掉已经失效的
           localStorage.removeItem(key);
         }
       }),
@@ -161,21 +168,21 @@ router.post('/clear', function(req, res) {
 
 router.post('/cacheList', function(req, res) {
   res.send({
-    cacheName,
+    cacheName: updateCacheName(),
     filesToCache,
   });
 });
 
 router.post('/cacheList/set', function(req, res) {
-  if (req.body.cacheName) {
-    cacheName = req.body.cacheName;
+  if (req.body && req.body.cacheName) {
+    updateCacheName(req.body.cacheName);
   }
-  if (req.body.filesToCache) {
+  if (req.body && req.body.filesToCache) {
     filesToCache = req.body.filesToCache;
   }
   res.send({
     success: true,
-    cacheName,
+    cacheName: updateCacheName(),
     filesToCache,
   });
 });
