@@ -133,7 +133,7 @@ self.addEventListener('notificationclick', function (event) {
   if (event.action === 'daozhao.com') {
     url = 'https://www.daozhao.com';
   } else {
-    url = 'https://www.daozhao.com.cn';
+    url = 'https://api.daozhao.net';
   }
   event.waitUntil(
     self.clients.openWindow(url)

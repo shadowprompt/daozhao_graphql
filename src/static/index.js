@@ -60,7 +60,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
 setTimeout(() => {
   const div = document.createElement('div');
   div.append(
-    '这个图片的链接是https://www.daozhao.com.cn/static/bd.gif, 它其实是百度的图片，不信你用postman来get或者用隐私模式打开试试',
+    '这个图片的链接是https://api.daozhao.net/static/bd.gif, 它其实是百度的图片，不信你用postman来get或者用隐私模式打开试试',
   );
   const img = new Image();
   img.src = '/static/bd.gif';

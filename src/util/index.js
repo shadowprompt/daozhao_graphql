@@ -147,7 +147,7 @@ const getWXAccessToken = (response, direct = false) =>
     };
     const queryAccessTokenFromDaozhao = () => {
       axios
-        .post('https://www.daozhao.com.cn/wxmin/getAccessToken')
+        .post('https://api.daozhao.net/wxmin/getAccessToken')
         .then(({ data }) => {
           console.log('get access_token from Daozhao success');
           resolve(data);
