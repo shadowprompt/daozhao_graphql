@@ -5,19 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="theme-color" content="#5eace0"/>
-  <!-- <link rel="manifest" id="manifest"> -->
-  <link rel="manifest" href="/static/manifest.json">
-  <title>Index</title>
-  <script src="/static/lib-flexible.js"></script>
-  <script src="/static/vconsole.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/index.css">
+  <title>道招 | 关注互联网|聚焦Web</title>
+  <style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+    #daozhao {
+        border: none;
+        width: 100%;
+        height: 100%;
+    }
+  </style>
 </head>
 <body>
-  This is the index;
-  <button id='btn'>订阅消息</button>
-  <button id='test'>测试</button>
-  <script src="/static/socket.io.js"></script>
-  <script src="/static/index.js"></script>
-  
+  <iframe id="daozhao" src="https://www.daozhao.com"></iframe>
 </body>
 </html>
