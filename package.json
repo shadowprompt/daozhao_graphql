@@ -16,7 +16,7 @@
     "apollo-link": "^1.2.8",
     "apollo-link-error": "^1.1.7",
     "apollo-link-http": "^1.5.11",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "env2": "^2.2.2",
     "express-graphql": "^0.7.1",
     "graphql": "^14.1.1",
